@@ -7,5 +7,5 @@ object SpecialCharacterValidator {
         if (!matches) error("특수문자를 포함해야 합니다.")
     }
 
-    private val specialCharacters = arrayListOf("!", "@", "#", "\$", "%", "^", "&", "*", "(", ")", "_", "+", "-", "=", "[")
+    private val specialCharacters = arrayListOf("!", "@", "#", "\$", "$", "%", "^", "&", "*", "(", ")", "_", "+", "-", "=", "[", "/")
 }
