@@ -15,7 +15,7 @@ val Regex.Companion.dateTime
     get() = "^\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}\$".toRegex()
 
 val Regex.Companion.url
-    get() = "^http[s]?://[^\\s]+\$".toRegex()
+    get() = "^http[s]?://[^\\s]\$".toRegex()
 
 val Regex.Companion.ip
     get() = "^\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\$".toRegex()
