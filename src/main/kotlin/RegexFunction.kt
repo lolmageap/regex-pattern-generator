@@ -6,7 +6,7 @@ fun Regex.max(
     size: Int,
 ) = "$this|^.{0,${size}}\$".toRegex()
 
-fun Regex.range(
+fun Regex.length(
     min: Int,
     max: Int,
 ) = "$this|^.{${min},${max}}\$".toRegex()
@@ -14,18 +14,32 @@ fun Regex.range(
 operator fun Regex.plus(
     other: Regex,
 ): Regex {
-    val first = this.pattern.removePrefix("^").removeSuffix(".*$")
-    val second = other.pattern.removePrefix("^").removeSuffix(".*$")
-    val third = first.replaceAfter(")(?=.*", "")
-    val value = (third + second).replace(")(?=.*", "")
-    return Regex("^(?=.*$value).*$")
+    val first = this.pattern
+        .removePrefix("^")
+        .removePrefix("(?=.*")
+        .removePrefix(".")
+        .removeSuffix("$")
+        .removeSuffix("*")
+        .removeSuffix(".")
+        .removeSuffix(")")
+
+    val second = other.pattern
+        .removePrefix("^")
+        .removePrefix("*$")
+        .removePrefix(".")
+        .removeSuffix("*$")
+        .removeSuffix(".")
+        .removeSuffix(")")
+
+    val value = "$first)(?=.*$second)"
+    return Regex("^(?=.*${value}.*$")
 }
 
 fun Regex.exclude(
     vararg specialCharacters: String,
 ): Regex {
-    val stringValue = specialCharacters.joinToString { it }
-    val charArray = stringValue.toCharArray()
+    val stringValue = specialCharacters.joinToString("")
+    val charArray = stringValue.toCharArray().distinct()
     charArray.forEach(SpecialCharacterValidator::contains)
 
     var pattern = this.pattern
@@ -43,8 +57,8 @@ fun Regex.exclude(
 fun Regex.include(
     vararg specialCharacters: String,
 ): Regex {
-    val stringValue = specialCharacters.joinToString { it }
-    val charArray = stringValue.toCharArray()
+    val stringValue = specialCharacters.joinToString("")
+    val charArray = stringValue.toCharArray().distinct()
     charArray.forEach(SpecialCharacterValidator::contains)
 
     val pattern = "${charArray.joinToString()}\$"
